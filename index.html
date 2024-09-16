@@ -3,13 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Template</title>
-    <link rel="icon" type="image/png" href="https://www.google.com/s2/u/0/favicons?domain=fontawesome.com">
+    <title>To Do List</title>
+    <link rel="icon" type="image/png" href="Game Up Favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Script -->
+    <div class="Container">
+        <div class="TodoApp">
+            <h2>GameUp <img src="Game Up Logo.png"></h2>
+            <div class="row">
+                <input type="text" id="input-box" placeholder="Add new Task">
+            </div>
+            <div class="row2"> 
+                <input type="number" id="reward-count" placeholder="Enter XP for Task">
+            </div>
+            <div class="row3"> 
+                <h3>Dealine:<input type="date" onload="getDate()" class="form-control" id="date" name="date"></h3>
+            </div>
+
+            <h3>Total XP earned is: <span id="textLine"></span></h3>
+        
+    <div class="div-button"><button onclick="addTask()">Add</button></div>
+            
+            <ul id="list-container">
+            </ul>
+        </div> 
+    </div>
     <script src="script.js"></script> 
 </body>
 </html>
