@@ -5,31 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do List</title>
     <link rel="icon" type="image/png" href="Game Up Favicon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="Container">
         <div class="TodoApp">
-            <h2>GameUp <img src="Game Up Logo.png"></h2>
+            <h2>GameUp <img src="Game Up Logo.png" alt="Game Up Logo"></h2>
+            <h2>Task Creator</h2>
             <div class="row">
+                <label for="input-box" class="visually-hidden">Task Name:</label>
                 <input type="text" id="input-box" placeholder="Add new Task">
             </div>
             <div class="row2"> 
-                <input type="number" id="reward-count" placeholder="Enter XP for Task">
+                <label for="reward-count" class="visually-hidden">XP Reward:</label>
+                <input type="number" id="reward-count" placeholder="Enter XP for Task" min="1">
             </div>
             <div class="row3"> 
-                <h3>Dealine:<input type="date" onload="getDate()" class="form-control" id="date" name="date"></h3>
+                <h3>Deadline: <input type="date" id="date" name="date"></h3>
             </div>
-
-            <h3>Total XP earned is: <span id="textLine"></span></h3>
-        
-    <div class="div-button"><button onclick="addTask()">Add</button></div>
-            
-            <ul id="list-container">
-            </ul>
+            <div class="div-button">
+                <button onclick="addTask()">Add Task</button>
+            </div>
+            <div id="xp-summary">
+                <h2>XP and Rewards Summary</h2>
+                <h3><p id="textLine">Total XP: 0</p>
+                <p id="redeemed-time">Minutes Redeemed: 0 min</p>
+                <p id="redeemed-rupees">Rupees Redeemed: ₹0</p></h3>
+            </div>
+            <div class="div-button">
+                <button onclick="openRedeemDialog()">Redeem XP</button>
+                <button onclick="openSpendDialog()">Use Rewards</button>
+            </div>
+            <h2>Task List <h3>(Click on Task to mark as complete)</h3> </h2>
+            <ul id="list-container"></ul>
         </div> 
     </div>
-    <script src="script.js"></script> 
+    <div id="redeem-dialog" class="hidden">
+        <h3>Redeem XP</h3>
+        <label for="conversion-type">Convert XP to:</label>
+        <select id="conversion-type">
+            <option value="time">Minutes of Free Time</option>
+            <option value="money">Rupees</option>
+        </select>
+        <label for="conversion-rate">Conversion Rate:</label>
+        <input type="number" id="conversion-rate" placeholder="1 XP = ? min" min="1">
+        <label for="redeem-amount">XP to Redeem:</label>
+        <input type="number" id="redeem-amount" placeholder="XP to redeem" min="1">
+        <button onclick="redeemXP()">Confirm</button>
+        <button onclick="closeRedeemDialog()">Cancel</button>
+    </div>
+    <div id="spend-dialog" class="hidden">
+        <h3>Spend Rewards</h3>
+        <label for="spend-type">Choose Reward to spend:</label>
+        <select id="spend-type">
+            <option value="time">Minutes</option>
+            <option value="money">Rupees</option>
+        </select>
+        <label for="spend-amount">Amount to Spend:</label>
+        <input type="number" id="spend-amount" placeholder="Enter amount" min="1">
+        <button onclick="spendValue()">Confirm</button>
+        <button onclick="closeSpendDialog()">Cancel</button>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
+
