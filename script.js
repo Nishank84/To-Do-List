@@ -31,14 +31,22 @@ function addTask() {
         return;
     }
 
+    const currentDate = new Date().toISOString().split("T")[0];
+    const isOverdue = deadline < currentDate; // Check if the task is overdue
+
     const li = document.createElement("li");
     li.innerHTML = `
-            ${inputBox.value} <br>
-            ${rewardCount.value}XP<br>
-            ${formatDate(deadLine.value)}
+            ${taskName}<br>
+            ${rewardCount.value} XP<br>
+            ${formatDate(deadline)}<br>
             <span>&times;</span>`;
     li.dataset.xp = xpReward;
     li.dataset.deadline = deadline;
+
+    if (isOverdue) {
+        li.classList.add("overdue-task"); // Add a class to style overdue tasks
+    }
+
     listContainer.appendChild(li);
 
     resetForm();
@@ -102,11 +110,33 @@ function sortTasks() {
     sortedTasks.forEach(item => listContainer.appendChild(item));
 }
 
-
-
 // Update Total XP
 function updateTotalXP() {
     textLine.textContent = totalXP;
+}
+
+// Validate and mark overdue tasks
+function validateDeadlines() {
+    const tasks = listContainer.children; // Get all tasks in the list container
+    const today = new Date().setHours(0, 0, 0, 0); // Today's date (midnight)
+
+    Array.from(tasks).forEach(task => {
+        const deadline = new Date(task.dataset.deadline).setHours(0, 0, 0, 0); // Task's deadline (midnight)
+
+        // Check if the task is overdue and not completed
+        if (!task.classList.contains("checked") && deadline < today) {
+            task.style.color = "red"; // Turn text red
+            if (!task.querySelector(".overdue-marker")) {
+                const marker = document.createElement("span");
+                marker.className = "overdue-marker";
+                task.appendChild(marker); // Add event marker
+            }
+        } else {
+            task.style.color = ""; // Reset text color
+            const marker = task.querySelector(".overdue-marker");
+            if (marker) marker.remove(); // Remove overdue marker if no longer overdue
+        }
+    });
 }
 
 // Open the redeem dialog
@@ -231,6 +261,10 @@ function updateTotalXP() {
     textLine.textContent = `Available XP: ${totalXP}`; // Update total XP display
 }
 
+// Call validateDeadlines whenever tasks are updated
+listContainer.addEventListener("DOMNodeInserted", validateDeadlines);
+listContainer.addEventListener("DOMNodeRemoved", validateDeadlines);
+
 // LocalStorage
 function saveData() {
     localStorage.setItem("tasks", listContainer.innerHTML); // Save tasks
@@ -259,17 +293,39 @@ function formatDate(dateString) {
 
 // Load Tasks
 loadData();
+validateDeadlines();
 
 function loadData() {
     totalXP = parseInt(localStorage.getItem("totalXP")) || 0;
     redeemedMinutes = parseInt(localStorage.getItem("redeemedMinutes")) || 0;
     redeemedRupees = parseInt(localStorage.getItem("redeemedRupees")) || 0;
 
-    // Update UI with loaded data
-    updateTotalXP();
-    updateRedeemedDisplay();
+ // Load tasks and set them in the list container
+ const savedTasks = localStorage.getItem("tasks");
+ if (savedTasks) {
+     listContainer.innerHTML = savedTasks;
+ }
+
+ // Optionally, reattach event listeners to dynamically created elements if needed
+ attachEventListenersToTasks();
 }
 
-// Call loadData to initialize the app state on page load
+// Helper function to reattach event listeners to dynamically loaded tasks
+function attachEventListenersToTasks() {
+ const taskElements = listContainer.querySelectorAll(".task"); // Adjust the selector as per your task structure
+ taskElements.forEach(task => {
+     task.querySelector(".delete-button").addEventListener("click", deleteTask); // Example for delete
+     task.querySelector(".complete-button").addEventListener("click", completeTask); // Example for complete
+ });
+   // Update UI with loaded data 
+   updateTotalXP();
+   updateRedeemedDisplay();
+   
+}
+
+    
+
+
+// Call loadData and deadlines to initialize the app state on page load
 window.onload = loadData;
 

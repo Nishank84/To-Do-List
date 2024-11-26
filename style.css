@@ -127,6 +127,17 @@ ul li.checked {
     text-decoration: line-through;
 }
 
+/* Overdue Task Styling */
+.overdue {
+    color: red;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.overdue-task {
+    border: 1px solid red;
+}
+
 
 /* Close Button */
 ul li span {
